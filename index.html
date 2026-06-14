@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<!-- saved from url=(0061)file:///Users/yutashimada/Downloads/funny_face_prototype.html -->
-<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FUNNY FACE — 試遊版</title>
 <style>
@@ -35,23 +36,23 @@
 <body>
 <div id="wrap">
   <div id="ff-stage">
-    <div id="ff-bg" style="position: absolute; inset: 0px; background: rgb(20, 18, 28); transition: background 0.08s linear;"></div>
+    <div id="ff-bg" style="position:absolute;inset:0;background:#14121c;transition:background .08s linear;"></div>
 
     <div id="ff-char" style="position:absolute;left:2.5%;top:7.5%;width:28%;z-index:5;text-align:center;">
-      <svg id="ff-faceSvg" viewBox="0 0 80 80" width="64" height="64" style="display:block;margin:0 auto;width:64px;height:64px;"><circle cx="40" cy="42" r="30" fill="#aeb6c8"></circle><line x1="26" y1="34" x2="34" y2="34" stroke="#33384a" stroke-width="3"></line><line x1="46" y1="34" x2="54" y2="34" stroke="#33384a" stroke-width="3"></line><path d="M30 56 Q40 48 50 56" stroke="#33384a" stroke-width="3" fill="none"></path></svg>
+      <svg id="ff-faceSvg" viewBox="0 0 80 80" width="64" height="64" style="display:block;margin:0 auto;width:64px;height:64px;"></svg>
       <div id="ff-body" style="width:34px;height:30px;margin:2px auto 0;background:#e8e3f5;border-radius:6px 6px 10px 10px;"></div>
     </div>
 
     <div style="position:absolute;left:2.5%;top:1.5%;z-index:6;">
       <div style="font-size:11px;color:#b9b3cf;letter-spacing:.05em;">SCORE</div>
-      <div id="ff-score" style="font-size:22px;font-weight:600;color:#fff;line-height:1;">1700</div>
+      <div id="ff-score" style="font-size:22px;font-weight:600;color:#fff;line-height:1;">0</div>
     </div>
     <div style="position:absolute;right:3%;top:1.5%;z-index:6;text-align:right;">
       <div style="font-size:11px;color:#b9b3cf;letter-spacing:.05em;">COMBO</div>
       <div id="ff-combo" style="font-size:18px;font-weight:600;color:#fff;line-height:1;">0</div>
     </div>
 
-    <div id="ff-stageLabel" style="position: absolute; top: 19%; left: 0px; right: 0px; text-align: center; z-index: 6; font-size: 24px; font-weight: 600; letter-spacing: 0.04em; color: rgb(111, 106, 133); transition: 0.15s;">SAD...</div>
+    <div id="ff-stageLabel" style="position:absolute;top:19%;left:0;right:0;text-align:center;z-index:6;font-size:24px;font-weight:600;letter-spacing:.04em;color:#6f6a85;transition:all .15s;">SAD...</div>
 
     <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.10);z-index:2;"></div>
 
@@ -60,17 +61,17 @@
 
     <div id="ff-notes" style="position:absolute;inset:0;z-index:4;pointer-events:none;"></div>
 
-    <div id="ff-flashL" style="position: absolute; left: 0px; top: 0px; bottom: 0px; width: 50%; background: rgb(255, 255, 255); opacity: 0; z-index: 7; pointer-events: none; transition: opacity 0.15s;"></div>
-    <div id="ff-flashR" style="position: absolute; right: 0px; top: 0px; bottom: 0px; width: 50%; background: rgb(255, 255, 255); opacity: 0; z-index: 7; pointer-events: none; transition: opacity 0.15s;"></div>
+    <div id="ff-flashL" style="position:absolute;left:0;top:0;bottom:0;width:50%;background:#fff;opacity:0;z-index:7;pointer-events:none;"></div>
+    <div id="ff-flashR" style="position:absolute;right:0;top:0;bottom:0;width:50%;background:#fff;opacity:0;z-index:7;pointer-events:none;"></div>
 
     <div id="ff-tapL" style="position:absolute;left:0;top:0;bottom:0;width:50%;z-index:9;"></div>
     <div id="ff-tapR" style="position:absolute;right:0;top:0;bottom:0;width:50%;z-index:9;"></div>
 
-    <div id="ff-overlay" style="position: absolute; inset: 0px; z-index: 12; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(10, 8, 16, 0.92); text-align: center; padding: 0px 24px;">
-      <div id="ff-overTitle" style="font-size: 30px; font-weight: 600; color: rgb(111, 106, 133); letter-spacing: 0.06em;">SAD...</div>
-      <div id="ff-overSub" style="font-size:14px;color:#b9b3cf;margin-top:10px;line-height:1.7;"></div>
-      <button id="ff-startBtn" style="margin-top:22px;background:#d4537e;color:#fff;border:none;border-radius:8px;padding:14px 30px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;">もう一度</button>
-      <div id="ff-result" style="display: block; margin-top: 10px;"><div style="font-size:13px;color:#b9b3cf;">SCORE</div><div style="font-size:34px;font-weight:600;color:#fff;line-height:1.1;">1700</div><div style="margin-top:6px;font-size:14px;color:#fff;">+率 9%</div><div style="margin-top:10px;font-size:15px;font-weight:600;color:#6f6a85;">「Certified Sleepwalker」</div></div>
+    <div id="ff-overlay" style="position:absolute;inset:0;z-index:12;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,8,16,.92);text-align:center;padding:0 24px;">
+      <div id="ff-overTitle" style="font-size:30px;font-weight:600;color:#fff;letter-spacing:.06em;">FUNNY FACE</div>
+      <div id="ff-overSub" style="font-size:14px;color:#b9b3cf;margin-top:10px;line-height:1.7;">画面の左半分＝青ノーツ<br>右半分＝オレンジノーツ<br>真ん中の合体ノーツは左右同時押し<br><br>判定ラインに重なった瞬間にタップ</div>
+      <button id="ff-startBtn" style="margin-top:22px;background:#d4537e;color:#fff;border:none;border-radius:8px;padding:14px 30px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;">タップして開始</button>
+      <div id="ff-result" style="display:none;margin-top:10px;"></div>
     </div>
   </div>
 
@@ -346,6 +347,5 @@
   startBtn.addEventListener('touchstart', e=>{ e.preventDefault(); start(); }, {passive:false});
 })();
 </script>
-
-
-</body></html>
+</body>
+</html>
