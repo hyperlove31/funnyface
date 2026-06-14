@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)file:///Users/yutashimada/Downloads/funny_face_prototype.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FUNNY FACE — 試遊版</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #0a0810;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+    color: #fff;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #wrap {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 100vh; padding: 12px;
+  }
+  #ff-stage {
+    position: relative; width: 100%; max-width: 380px; aspect-ratio: 9/16;
+    border-radius: 14px; overflow: hidden; background: #14121c;
+  }
+  #ff-controls { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+  select { font-family: inherit; font-size: 15px; padding: 6px 10px; border-radius: 8px;
+    background: #221f2e; color: #fff; border: 1px solid #3a3650; }
+  .note { box-shadow: 0 0 0 2px rgba(255,255,255,.25) inset; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="ff-stage">
+    <div id="ff-bg" style="position: absolute; inset: 0px; background: rgb(20, 18, 28); transition: background 0.08s linear;"></div>
+
+    <div id="ff-char" style="position:absolute;left:2.5%;top:7.5%;width:28%;z-index:5;text-align:center;">
+      <svg id="ff-faceSvg" viewBox="0 0 80 80" width="64" height="64" style="display:block;margin:0 auto;width:64px;height:64px;"><circle cx="40" cy="42" r="30" fill="#aeb6c8"></circle><line x1="26" y1="34" x2="34" y2="34" stroke="#33384a" stroke-width="3"></line><line x1="46" y1="34" x2="54" y2="34" stroke="#33384a" stroke-width="3"></line><path d="M30 56 Q40 48 50 56" stroke="#33384a" stroke-width="3" fill="none"></path></svg>
+      <div id="ff-body" style="width:34px;height:30px;margin:2px auto 0;background:#e8e3f5;border-radius:6px 6px 10px 10px;"></div>
+    </div>
+
+    <div style="position:absolute;left:2.5%;top:1.5%;z-index:6;">
+      <div style="font-size:11px;color:#b9b3cf;letter-spacing:.05em;">SCORE</div>
+      <div id="ff-score" style="font-size:22px;font-weight:600;color:#fff;line-height:1;">1700</div>
+    </div>
+    <div style="position:absolute;right:3%;top:1.5%;z-index:6;text-align:right;">
+      <div style="font-size:11px;color:#b9b3cf;letter-spacing:.05em;">COMBO</div>
+      <div id="ff-combo" style="font-size:18px;font-weight:600;color:#fff;line-height:1;">0</div>
+    </div>
+
+    <div id="ff-stageLabel" style="position: absolute; top: 19%; left: 0px; right: 0px; text-align: center; z-index: 6; font-size: 24px; font-weight: 600; letter-spacing: 0.04em; color: rgb(111, 106, 133); transition: 0.15s;">SAD...</div>
+
+    <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.10);z-index:2;"></div>
+
+    <div id="ff-judgeLine" style="position:absolute;left:0;right:0;top:78%;height:2px;background:rgba(255,255,255,.45);z-index:3;"></div>
+    <div style="position:absolute;left:0;right:0;top:75.5%;height:5%;z-index:1;background:rgba(255,255,255,.04);"></div>
+
+    <div id="ff-notes" style="position:absolute;inset:0;z-index:4;pointer-events:none;"></div>
+
+    <div id="ff-flashL" style="position: absolute; left: 0px; top: 0px; bottom: 0px; width: 50%; background: rgb(255, 255, 255); opacity: 0; z-index: 7; pointer-events: none; transition: opacity 0.15s;"></div>
+    <div id="ff-flashR" style="position: absolute; right: 0px; top: 0px; bottom: 0px; width: 50%; background: rgb(255, 255, 255); opacity: 0; z-index: 7; pointer-events: none; transition: opacity 0.15s;"></div>
+
+    <div id="ff-tapL" style="position:absolute;left:0;top:0;bottom:0;width:50%;z-index:9;"></div>
+    <div id="ff-tapR" style="position:absolute;right:0;top:0;bottom:0;width:50%;z-index:9;"></div>
+
+    <div id="ff-overlay" style="position: absolute; inset: 0px; z-index: 12; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(10, 8, 16, 0.92); text-align: center; padding: 0px 24px;">
+      <div id="ff-overTitle" style="font-size: 30px; font-weight: 600; color: rgb(111, 106, 133); letter-spacing: 0.06em;">SAD...</div>
+      <div id="ff-overSub" style="font-size:14px;color:#b9b3cf;margin-top:10px;line-height:1.7;"></div>
+      <button id="ff-startBtn" style="margin-top:22px;background:#d4537e;color:#fff;border:none;border-radius:8px;padding:14px 30px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;">もう一度</button>
+      <div id="ff-result" style="display: block; margin-top: 10px;"><div style="font-size:13px;color:#b9b3cf;">SCORE</div><div style="font-size:34px;font-weight:600;color:#fff;line-height:1.1;">1700</div><div style="margin-top:6px;font-size:14px;color:#fff;">+率 9%</div><div style="margin-top:10px;font-size:15px;font-weight:600;color:#6f6a85;">「Certified Sleepwalker」</div></div>
+    </div>
+  </div>
+
+  <div id="ff-controls">
+    <label style="font-size:14px;color:#b9b3cf;">判定の甘さ</label>
+    <select id="ff-diff">
+      <option value="150">かんたん ±150ms</option>
+      <option value="110">ふつう ±110ms</option>
+      <option value="70">ガチ ±70ms</option>
+    </select>
+  </div>
+  <p style="font-size:12px;color:#7a7590;text-align:center;margin:10px 0 0;line-height:1.6;max-width:360px;">
+    音が出ます。端末横の消音スイッチをオフにしてください。<br>約35秒の試遊ループです。
+  </p>
+</div>
+
+<script>
+(function(){
+  const notesLayer = document.getElementById('ff-notes');
+  const scoreEl = document.getElementById('ff-score');
+  const comboEl = document.getElementById('ff-combo');
+  const stageLabel = document.getElementById('ff-stageLabel');
+  const bg = document.getElementById('ff-bg');
+  const faceSvg = document.getElementById('ff-faceSvg');
+  const flashL = document.getElementById('ff-flashL');
+  const flashR = document.getElementById('ff-flashR');
+  const overlay = document.getElementById('ff-overlay');
+  const overTitle = document.getElementById('ff-overTitle');
+  const overSub = document.getElementById('ff-overSub');
+  const startBtn = document.getElementById('ff-startBtn');
+  const resultEl = document.getElementById('ff-result');
+  const diffSel = document.getElementById('ff-diff');
+  const stageEl = document.getElementById('ff-stage');
+
+  const BPM = 128;
+  const beat = 60 / BPM;
+  const TRAVEL = 1.7;
+  const BOTH_WINDOW = 0.05;
+
+  // ステージの実ピクセル高さから判定ラインなどを比率で算出
+  function H(){ return stageEl.clientHeight; }
+  function judgeY(){ return H() * 0.78; }
+  const SPAWN_Y = -30;
+
+  let judgeWin = 0.15;
+  let ac = null, audioOK=false, startMs = 0, running = false, raf = 0;
+  function now(){ return (performance.now()-startMs)/1000; }
+  let notes = [], beatPlayed = -1;
+  let score = 0, combo = 0;
+  let history = [];
+  let stageIdx = 0;
+  const STAGES = ['SAD...','ALRIGHT','STUPID!','FUNNY!!!'];
+  const STAGE_COLOR = ['#6f6a85','#85b7eb','#ef9f27','#ED93B1'];
+  const STAGE_MULT = [1,2,3,4];
+  let pendL = -1, pendR = -1;
+  let lastJudge = 'plus';
+  let lastFaceBeat = -1;
+  let songLen = 0;
+
+  function buildChart(){
+    const arr = [];
+    let b = 8;
+    const pat = ['l','r','l','r','b','l','r','l','l','r','b','r','l','r'];
+    let pi = 0;
+    while(b < 64){
+      const s = pat[pi % pat.length];
+      if(s==='b'){ arr.push({beat:b, side:'both'}); b += 2; }
+      else { arr.push({beat:b, side: s==='l'?'left':'right'}); b += (b>32?0.5:1); }
+      pi++;
+    }
+    return arr.sort((a,b)=>a.beat-b.beat);
+  }
+
+  function faceMarkup(stage, judg){
+    const happy = judg==='plus';
+    let skin='#ffe0b2', mouth='', eyes='', extra='';
+    if(stage===0){ skin = happy?'#cfd8e8':'#aeb6c8';
+      eyes = '<line x1="26" y1="34" x2="34" y2="34" stroke="#33384a" stroke-width="3"/><line x1="46" y1="34" x2="54" y2="34" stroke="#33384a" stroke-width="3"/>';
+      mouth = happy? '<path d="M30 52 Q40 56 50 52" stroke="#33384a" stroke-width="3" fill="none"/>'
+                   : '<path d="M30 56 Q40 48 50 56" stroke="#33384a" stroke-width="3" fill="none"/>';
+    } else if(stage===1){ skin='#ffe0b2';
+      eyes = '<circle cx="30" cy="34" r="3.5" fill="#33384a"/><circle cx="50" cy="34" r="3.5" fill="#33384a"/>';
+      mouth = happy? '<path d="M30 52 Q40 58 50 52" stroke="#5a3a1a" stroke-width="3" fill="none"/>'
+                   : '<line x1="32" y1="54" x2="48" y2="54" stroke="#5a3a1a" stroke-width="3"/>';
+    } else if(stage===2){ skin='#ffd54f';
+      eyes = happy? '<text x="23" y="40" font-size="15" fill="#7a4a00">&gt;</text><text x="43" y="40" font-size="15" fill="#7a4a00">&lt;</text>'
+                  : '<circle cx="30" cy="34" r="4" fill="#7a4a00"/><circle cx="50" cy="34" r="4" fill="#7a4a00"/>';
+      mouth = happy? '<ellipse cx="40" cy="56" rx="12" ry="9" fill="#7a2a2a"/><path d="M30 52 Q40 50 50 52" stroke="#fff" stroke-width="2" fill="none"/>'
+                   : '<ellipse cx="40" cy="55" rx="7" ry="9" fill="#7a2a2a"/>';
+      extra = '<circle cx="20" cy="46" r="5" fill="#ff8a80" opacity=".7"/><circle cx="60" cy="46" r="5" fill="#ff8a80" opacity=".7"/>';
+    } else {
+      skin='#f8bbd0';
+      eyes = '<text x="21" y="42" font-size="18" fill="#c2185b">\u2605</text><text x="43" y="42" font-size="18" fill="#c2185b">\u2605</text>';
+      mouth = '<ellipse cx="40" cy="58" rx="15" ry="12" fill="#880e4f"/><ellipse cx="40" cy="64" rx="8" ry="5" fill="#ff5277"/>';
+      extra = '<circle cx="18" cy="48" r="6" fill="#ff5277" opacity=".8"/><circle cx="62" cy="48" r="6" fill="#ff5277" opacity=".8"/>';
+    }
+    return '<circle cx="40" cy="42" r="30" fill="'+skin+'"/>'+extra+eyes+mouth;
+  }
+  function drawFace(){ faceSvg.innerHTML = faceMarkup(stageIdx, lastJudge); }
+  drawFace();
+
+  function recalcStage(){
+    const n = history.length;
+    if(n===0) return;
+    const win = history.slice(-20);
+    const plus = win.filter(x=>x).length;
+    const rate = plus / win.length * 100;
+    const up = [null,30,60,85], down=[null,25,55,80];
+    if(stageIdx<3 && rate > up[stageIdx+1]) stageIdx++;
+    else if(n>=20 && stageIdx>0 && rate <= down[stageIdx]) stageIdx--;
+    stageLabel.textContent = STAGES[stageIdx];
+    stageLabel.style.color = STAGE_COLOR[stageIdx];
+    stageLabel.style.fontSize = (24 + stageIdx*4) + 'px';
+  }
+
+  function judge(side, t){
+    let best=null, bestDiff=1e9;
+    for(const nt of notes){
+      if(nt.done) continue;
+      if(side==='both' && nt.side!=='both') continue;
+      if(side!=='both' && nt.side!==side) continue;
+      const d = Math.abs(nt.hit - t);
+      if(d < bestDiff){ bestDiff=d; best=nt; }
+    }
+    if(best && bestDiff <= judgeWin){
+      best.done=true; if(best.el) best.el.remove();
+      registerResult(true);
+    }
+  }
+
+  function registerResult(ok){
+    history.push(ok);
+    lastJudge = ok ? 'plus':'minus';
+    if(ok){ combo++; recalcStage(); score += 100 * STAGE_MULT[stageIdx]; }
+    else { combo = 0; recalcStage(); }
+    scoreEl.textContent = score;
+    comboEl.textContent = combo;
+  }
+
+  function flash(side){
+    const f = side==='left'?flashL:flashR;
+    f.style.transition='none'; f.style.opacity='.5';
+    requestAnimationFrame(()=>{ f.style.transition='opacity .15s'; f.style.opacity='0'; });
+  }
+
+  function popText(side, ok){
+    const xPct = side==='left'? 22 : 72;
+    const el = document.createElement('div');
+    el.textContent = ok? '+' : '-';
+    el.style.cssText='position:absolute;left:'+xPct+'%;top:71%;font-size:30px;font-weight:700;z-index:8;pointer-events:none;color:'+(ok?'#fff':'#888')+';transition:all .4s;';
+    notesLayer.appendChild(el);
+    requestAnimationFrame(()=>{ el.style.transform='translate(-26px,-60px)'; el.style.opacity='0'; });
+    setTimeout(()=>el.remove(),420);
+  }
+
+  function handleTap(side){
+    if(!running) return;
+    const t = now();
+    flash(side);
+    if(side==='left') pendL = t; else pendR = t;
+    if(pendL>=0 && pendR>=0 && Math.abs(pendL-pendR)<=BOTH_WINDOW){
+      const tt = Math.min(pendL,pendR);
+      const before = history.length;
+      judge('both', tt);
+      const ok = history.length>before && history[history.length-1];
+      popText('left', ok); popText('right', ok);
+      pendL=-1; pendR=-1; return;
+    }
+    const before = history.length;
+    judge(side, t);
+    const ok = history.length>before && history[history.length-1];
+    popText(side, ok);
+  }
+
+  function bindTap(el, side){
+    el.addEventListener('touchstart', e=>{ e.preventDefault(); handleTap(side); }, {passive:false});
+    el.addEventListener('mousedown', e=>{ e.preventDefault(); handleTap(side); });
+  }
+  bindTap(document.getElementById('ff-tapL'),'left');
+  bindTap(document.getElementById('ff-tapR'),'right');
+
+  function tryAudio(){
+    try{ ac=new (window.AudioContext||window.webkitAudioContext)();
+      if(ac.state==='suspended') ac.resume();
+      audioOK = (ac.state==='running'||ac.state==='suspended');
+    }catch(e){ audioOK=false; }
+  }
+  function kick(at){ if(!audioOK)return; const o=ac.createOscillator(),g=ac.createGain(); o.frequency.setValueAtTime(140,at); o.frequency.exponentialRampToValueAtTime(45,at+.12); g.gain.setValueAtTime(.9,at); g.gain.exponentialRampToValueAtTime(.001,at+.16); o.connect(g).connect(ac.destination); o.start(at); o.stop(at+.18); }
+  function hat(at){ if(!audioOK)return; const b=ac.createBuffer(1,Math.floor(ac.sampleRate*.04),ac.sampleRate),d=b.getChannelData(0); for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2); const s=ac.createBufferSource();s.buffer=b; const f=ac.createBiquadFilter();f.type='highpass';f.frequency.value=7000; const g=ac.createGain();g.gain.value=.25; s.connect(f).connect(g).connect(ac.destination); s.start(at); }
+  function bass(at,freq){ if(!audioOK)return; const o=ac.createOscillator(),g=ac.createGain(); o.type='sawtooth'; o.frequency.value=freq; const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=600; g.gain.setValueAtTime(.0001,at); g.gain.linearRampToValueAtTime(.18,at+.02); g.gain.exponentialRampToValueAtTime(.001,at+beat*.9); o.connect(f).connect(g).connect(ac.destination); o.start(at); o.stop(at+beat); }
+
+  function onBeat(cb){
+    if(audioOK){ const at = ac.currentTime + 0.02;
+      kick(at); hat(at);
+      if(cb%2===1) hat(at+beat/2);
+      const scale=[55,55,62,73,55,49,62,55];
+      bass(at, scale[cb%scale.length]); }
+    bg.style.background = stageIdx===3 ? '#451238' : '#1d1a28';
+    requestAnimationFrame(()=>{ bg.style.background = '#14121c'; });
+  }
+
+  function loop(){
+    if(!running) return;
+    const t = now();
+    const cb = Math.floor(t/beat);
+    if(cb>beatPlayed){ beatPlayed=cb; if(t>=0) onBeat(cb); }
+    const jy = judgeY();
+
+    for(const nt of notes){
+      if(nt.done) continue;
+      const appear = nt.hit - TRAVEL;
+      if(t < appear) continue;
+      const prog = (t - appear) / TRAVEL;
+      const y = SPAWN_Y + prog*(jy - SPAWN_Y);
+      if(!nt.el){
+        const el = document.createElement('div');
+        const w = stageEl.clientWidth;
+        let col = nt.side==='left'?'#378add':(nt.side==='right'?'#ef9f27':'linear-gradient(90deg,#378add 50%,#ef9f27 50%)');
+        let x = nt.side==='left'? w*0.22 : (nt.side==='right'? w*0.72 : w*0.5-17);
+        el.className='note';
+        el.style.cssText='position:absolute;width:34px;height:34px;border-radius:50%;left:'+x+'px;top:0;background:'+col+';';
+        nt.el = el; notesLayer.appendChild(el);
+      }
+      nt.el.style.top = y + 'px';
+      if(t - nt.hit > judgeWin){ nt.done=true; nt.el.remove(); registerResult(false); }
+    }
+
+    const fb = Math.floor(t / beat);
+    if(fb !== lastFaceBeat){
+      lastFaceBeat = fb;
+      const interval = stageIdx===3?1:2;
+      if(fb % interval === 0) drawFace();
+    }
+
+    if(t > songLen){ finish(); return; }
+    raf = requestAnimationFrame(loop);
+  }
+
+  function start(){
+    tryAudio();
+    judgeWin = parseInt(diffSel.value)/1000;
+    notes = buildChart().map(n=>({hit:n.beat*beat, side:n.side, done:false, el:null}));
+    songLen = notes[notes.length-1].hit + 2.5;
+    score=0; combo=0; history=[]; stageIdx=0; beatPlayed=-1; lastFaceBeat=-1; lastJudge='plus';
+    scoreEl.textContent='0'; comboEl.textContent='0';
+    stageLabel.textContent='SAD...'; stageLabel.style.color=STAGE_COLOR[0]; stageLabel.style.fontSize='24px';
+    notesLayer.innerHTML=''; drawFace();
+    overlay.style.display='none'; resultEl.style.display='none';
+    running=true;
+    startMs = performance.now() + 100;
+    raf = requestAnimationFrame(loop);
+  }
+
+  function finish(){
+    running=false; cancelAnimationFrame(raf);
+    const plus = history.filter(x=>x).length;
+    const total = history.length||1;
+    const rate = Math.round(plus/total*100);
+    const titles=['Certified Sleepwalker','Aggressively Average','Premium Idiot','Legally Too Funny'];
+    overlay.style.display='flex';
+    overTitle.textContent = STAGES[stageIdx];
+    overTitle.style.color = STAGE_COLOR[stageIdx];
+    overSub.innerHTML = '';
+    resultEl.style.display='block';
+    resultEl.innerHTML = '<div style="font-size:13px;color:#b9b3cf;">SCORE</div>'+
+      '<div style="font-size:34px;font-weight:600;color:#fff;line-height:1.1;">'+score+'</div>'+
+      '<div style="margin-top:6px;font-size:14px;color:#fff;">+\u7387 '+rate+'%</div>'+
+      '<div style="margin-top:10px;font-size:15px;font-weight:600;color:'+STAGE_COLOR[stageIdx]+';">\u300c'+titles[stageIdx]+'\u300d</div>';
+    startBtn.textContent = '\u3082\u3046\u4e00\u5ea6';
+  }
+
+  startBtn.addEventListener('click', start);
+  startBtn.addEventListener('touchstart', e=>{ e.preventDefault(); start(); }, {passive:false});
+})();
+</script>
+
+
+</body></html>
